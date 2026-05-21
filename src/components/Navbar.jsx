@@ -3,10 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+import { authClient } from '@/lib/auth-client';
+import { Avatar, Button } from '@heroui/react';
 
 const Navbar = () => {
+    const {data: session} = authClient.useSession();
+    const user = session?.user;
+     const handleSignOut =async()=>{
+            await authClient.signOut();
+    }
     const pathname = usePathname(); 
-  
     const navLinks = [
         { name: 'Home', href: '/' },
         { name: 'Ideas', href: '/ideas' },
@@ -71,10 +77,25 @@ const Navbar = () => {
                     </ul>
                 </div>
 
-                <div className="navbar-end">
+                <div className="navbar-end gap-1">
                   <ThemeToggle />
                     <ul className='font-semibold'>
-                        <li>
+                     {user ? <>
+                         <ul className='flex gap-2 items-center'>
+                             <li>
+                            <Avatar>
+                            <Avatar.Image referrerPolicy='no-referrer' alt="user name" src={user?.image} />
+                            <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
+                            </Avatar>
+                          </li>
+                           <li>
+                         <Button onClick={handleSignOut} variant='danger' className={'rounded-none'}>Logout</Button>
+                       </li>
+                         </ul>
+                      </> 
+                     :
+                     <>
+                      <li>
                             <Link 
                                 href={'/login'} 
                                 className={`px-4 py-2 rounded-lg transition-all ${pathname === '/login' ? 'dark:text-blue-400 font-bold bg-blue-50 dark:bg-slate-800' : 'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800'}`}
@@ -82,6 +103,9 @@ const Navbar = () => {
                                 Login
                             </Link>
                         </li>
+                     </>
+
+                     }
                     </ul>
                 </div>
             </div>

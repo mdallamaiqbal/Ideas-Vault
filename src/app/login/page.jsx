@@ -1,7 +1,9 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {Button, Card, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 
 const LoginPage = () => {
@@ -9,7 +11,22 @@ const LoginPage = () => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
+    const {data,error}= await authClient.signIn.email({
+        email:user.email,
+        password:user.password,
+    })
+     if(data){
+            redirect('/')
+        }
+        if(error){
+            alert('error')
+        }
     }
+    const handleGoogleSignin=async()=>{
+  await authClient.signIn.social({
+    provider:"google"
+  })
+}
     return (
     <div className="max-w-7xl mx-auto mt-10 md:mt-20">
      <Card>
@@ -63,6 +80,7 @@ const LoginPage = () => {
             <p className="text-muted">Register new account </p>
             <Link  href={'/register'} className="hover:text-blue-600 font-semibold">Register</Link>
          </div>
+         <Button onClick={handleGoogleSignin} variant="outline" className={' rounded-none w-full'}> Google connect</Button>
           </Card>
         </div>
     );

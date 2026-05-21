@@ -1,11 +1,25 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
 import {Button, Card, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { redirect } from "next/navigation";
 
 const RegisterPage = () => {
      const onSubmit = async(e)=>{
     e.preventDefault()
     const formData = new FormData(e.currentTarget);
-    const register = Object.fromEntries(formData.entries());
+    const user = Object.fromEntries(formData.entries());
+    const {data,error} = await authClient.signUp.email({
+        email:user.email,
+        password:user.password,
+        name:user.name,
+        image:user.image 
+  });
+    if(data){
+        redirect('/')
+    }
+    if(error){
+        alert('error')
+    }
     }
     return (
         <div className="max-w-7xl mx-auto mt-10 md:mt-20">
@@ -23,8 +37,8 @@ const RegisterPage = () => {
               </TextField>
                <TextField
                 isRequired
-                name="PhotoURL"
-                type="text"
+                name="image"
+                type="url"
                 >
                 <Label>PhotoURL</Label>
                 <Input placeholder="Enter your PhotoURL" />
