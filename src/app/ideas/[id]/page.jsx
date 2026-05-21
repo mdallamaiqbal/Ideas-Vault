@@ -1,32 +1,35 @@
 "use client";
-import React, { useEffect, useState,useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import EditCommentModal from '@/components/EditCommentModal';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
+import { authClient } from '@/lib/auth-client';
 
 const IdeaDetailsPage = () => {
     const params = useParams();
-    const id = params?.id; 
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+    const id = params?.id;
 
     const [idea, setIdea] = useState(null);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState("");
     const [isCommentSubmitting, setIsCommentSubmitting] = useState(false);
 
-    
+
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [activeComment, setActiveComment] = useState(null);
 
-   
+
     const fetchIdeaDetails = useCallback(() => {
         if (!id) return;
-        setLoading(true); 
+        setLoading(true);
         fetch(`http://localhost:5000/ideas/${id}`)
             .then((res) => {
-             
+
                 if (!res.ok) {
                     throw new Error("Idea not found on server");
                 }
@@ -43,19 +46,20 @@ const IdeaDetailsPage = () => {
             });
     }, [id]);
 
-   useEffect(() => {
+    useEffect(() => {
         if (id) {
             fetchIdeaDetails();
         }
     }, [id, fetchIdeaDetails]);
-   
+
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (!commentText.trim() || isCommentSubmitting) return;
 
         setIsCommentSubmitting(true);
         const newComment = {
-            commentId: Date.now().toString(), 
+            commentId: Date.now().toString(),
+            authorEmail: user?.email,
             text: commentText,
             date: new Date().toLocaleDateString()
         };
@@ -70,8 +74,8 @@ const IdeaDetailsPage = () => {
             });
 
             if (res.ok) {
-                setCommentText(""); 
-                fetchIdeaDetails(); 
+                setCommentText("");
+                fetchIdeaDetails();
             } else {
                 alert("Failed to add comment");
             }
@@ -97,22 +101,22 @@ const IdeaDetailsPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto my-12 p-6 bg-white shadow-md border border-gray-100 rounded-3xl">
-           
+
             <Link href="/ideas" className="text-sm font-medium text-blue-600 hover:underline mb-6 inline-block">
                 ← Back to Ideas Vault
             </Link>
-          
+
             <div className="relative w-full h-96 mb-8 rounded-2xl overflow-hidden">
-                <Image 
-                    src={idea.imageUrl} 
-                    alt={idea.ideaTitle} 
+                <Image
+                    src={idea.imageUrl}
+                    alt={idea.ideaTitle}
                     className="max-w-80 mx-auto object-cover"
                     priority
                     width={400}
                     height={200}
                 />
             </div>
-           
+
             <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
                 <span className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
                     {idea.category}
@@ -123,7 +127,7 @@ const IdeaDetailsPage = () => {
                     <span className="text-green-600 font-semibold">● {idea.status}</span>
                 </div>
             </div>
-           
+
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 {idea.ideaTitle}
             </h1>
@@ -141,7 +145,7 @@ const IdeaDetailsPage = () => {
                 <h3 className="text-2xl font-bold text-gray-800 mb-6">
                     Discussion ({idea.comments?.length || 0})
                 </h3>
-               
+
                 <form onSubmit={handleCommentSubmit} className="mb-8">
                     <textarea
                         value={commentText}
@@ -162,30 +166,33 @@ const IdeaDetailsPage = () => {
                     </div>
                 </form>
 
-              
                 <div className="space-y-4">
                     {idea.comments?.map((comment) => (
                         <div key={comment.commentId} className="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex justify-between items-start transition hover:bg-gray-100/50">
-                            <div className="space-y-1">
+                            <div className="space-y-1 flex flex-col items-start">
+                                <span className="text-blue-600 bg-blue-50  py-0.5 rounded-md font-medium">
+                                    By: {comment.authorEmail}
+                                </span>
                                 <p className="text-gray-700 text-sm md:text-base leading-relaxed">{comment.text}</p>
                                 <span className="text-xs text-gray-400 block">📅 {comment.date || "Just now"}</span>
                             </div>
 
-                           
-                            <div className="flex gap-2 ml-4">
-                                <button
-                                    onClick={() => { setActiveComment(comment); setIsEditOpen(true); }}
-                                    className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg font-medium hover:bg-blue-100 transition"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => { setActiveComment(comment); setIsDeleteOpen(true); }}
-                                    className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg font-medium hover:bg-red-100 transition"
-                                >
-                                    Delete
-                                </button>
-                            </div>
+                            {user?.email === comment.authorEmail && (
+                                <div className="flex gap-2 ml-4 ">
+                                    <button
+                                        onClick={() => { setActiveComment(comment); setIsEditOpen(true); }}
+                                        className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => { setActiveComment(comment); setIsDeleteOpen(true); }}
+                                        className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ))}
 
@@ -195,7 +202,6 @@ const IdeaDetailsPage = () => {
                 </div>
             </div>
 
-          
             {isEditOpen && (
                 <EditCommentModal
                     isOpen={isEditOpen}
@@ -206,7 +212,6 @@ const IdeaDetailsPage = () => {
                 />
             )}
 
-          
             {isDeleteOpen && (
                 <DeleteConfirmationModal
                     isOpen={isDeleteOpen}
