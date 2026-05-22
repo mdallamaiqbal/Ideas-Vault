@@ -16,7 +16,7 @@ const MyInteractions = () => {
         if (!user?.email) return;
 
         const fetchInteractions = async () => {
-            const res = await fetch(`http://localhost:5000/comments-on-my-ideas/${user.email}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/comments-on-my-ideas/${user.email}`);
             const data = await res.json();
             setInteractions(data);
             setLoading(false);

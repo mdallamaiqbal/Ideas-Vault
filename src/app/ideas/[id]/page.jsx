@@ -27,7 +27,7 @@ const IdeaDetailsPage = () => {
     const fetchIdeaDetails = useCallback(() => {
         if (!id) return;
         setLoading(true);
-        fetch(`http://localhost:5000/ideas/${id}`)
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}`)
             .then((res) => {
 
                 if (!res.ok) {
@@ -65,7 +65,7 @@ const IdeaDetailsPage = () => {
         };
 
         try {
-            const res = await fetch(`http://localhost:5000/ideas/${id}/comments`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
@@ -87,7 +87,7 @@ const IdeaDetailsPage = () => {
     };
 
     if (loading) {
-        return <div className="text-center mt-20 text-lg font-medium">Loading idea details...</div>;
+        return <div className="text-center mt-20 text-lg font-medium"><span className="loading loading-spinner loading-xl"></span></div>;
     }
 
     if (!idea) {
@@ -100,52 +100,58 @@ const IdeaDetailsPage = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto my-12 p-6 bg-white shadow-md border border-gray-100 rounded-3xl">
+        <div className="max-w-7xl mx-auto my-12 p-6 bg-white shadow-md border border-gray-100 rounded-3xl">
 
             <Link href="/ideas" className="text-sm font-medium text-blue-600 hover:underline mb-6 inline-block">
                 ← Back to Ideas Vault
             </Link>
-
-            <div className="relative w-full h-96 mb-8 rounded-2xl overflow-hidden">
+            <div className='flex flex-col min-w-full md:min-w-4xl gap-8 lg:gap-16 items-start bg-white p-6 md:p-8 rounded-3xl shadow-sm'>
+                
+            <div className="relative w-full flex items-center bg-gray-50 rounded-2xl p-5 overflow-hidden">
                 <Image
                     src={idea.imageUrl}
                     alt={idea.ideaTitle}
                     className="max-w-80 mx-auto object-cover"
                     priority
-                    width={400}
-                    height={200}
+                    width={350}
+                    height={250}
                 />
             </div>
-
-            <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
+             <div className="flex-1 w-full pt-2">
+             <div className='mb-5'>
                 <span className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
                     {idea.category}
                 </span>
+                <h3 className='mt-5'> By: {idea.authorEmail}</h3>
+             </div>
+            <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
                 <div className="text-sm text-gray-500 space-y-1 md:space-y-0 md:space-x-4 flex flex-col md:flex-row">
-                    <span> By: {idea.authorEmail}</span>
+                    
                     <span> Date: {idea.postedDate}</span>
                     <span className="text-green-600 font-semibold">● {idea.status}</span>
                 </div>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                {idea.ideaTitle}
+            <h1 className="text-xl md:text-2xl  font-bold text-gray-900 mb-4">
+             Title: {idea.ideaTitle}
             </h1>
 
-            <p className="text-lg text-gray-600 font-medium mb-6 italic pl-4">
-                {idea.shortDescription}
+            <p className="text-lg text-gray-600 font-medium mb-2 ">
+               Short Description: {idea.shortDescription}
             </p>
 
-            <div className="prose max-w-none text-gray-700 leading-relaxed border-t pt-6 mb-12">
+            <div className="text-gray-700 leading-relaxed  pt-6 mb-6">
                 <h3 className="text-xl font-bold mb-3 text-gray-800">Detailed Concept:</h3>
-                <p>{idea.detailedDescription || "No detailed description provided for this idea yet."}</p>
+                <p>{idea.detailedDescription}</p>
             </div>
 
-            <div className="border-t pt-8">
+              </div>
+              </div>
+               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                    Discussion ({idea.comments?.length || 0})
+                    Discussion ({idea.comments?.length })
                 </h3>
-
+             </div>
                 <form onSubmit={handleCommentSubmit} className="mb-8">
                     <textarea
                         value={commentText}
@@ -200,7 +206,7 @@ const IdeaDetailsPage = () => {
                         <p className="text-center text-gray-400 py-6 text-sm">No comments yet. Start the conversation!</p>
                     )}
                 </div>
-            </div>
+            
 
             {isEditOpen && (
                 <EditCommentModal

@@ -11,7 +11,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, ideaId, commentId, refreshCo
         setIsDeleting(true);
         try {
            
-            const res = await fetch(`http://localhost:5000/ideas/${ideaId}/comments/${commentId}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${ideaId}/comments/${commentId}`, {
                 method: 'DELETE'
             });
 

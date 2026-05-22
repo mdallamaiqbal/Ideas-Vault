@@ -24,7 +24,7 @@ const MyIdeasPage = () => {
         const fetchMyIdeas = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:5000/my-ideas/${user.email}`
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/my-ideas/${user.email}`
                 );
 
                 const data = await res.json();
@@ -52,7 +52,7 @@ const MyIdeasPage = () => {
         try {
 
             const res = await fetch(
-                `http://localhost:5000/ideas/${id}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}`,
                 {
                     method: "DELETE",
                 }
@@ -86,7 +86,7 @@ const MyIdeasPage = () => {
     if (loading) {
         return (
             <div className='text-center mt-10'>
-                Loading...
+            <span className="loading loading-spinner loading-xl"></span>
             </div>
         );
     }
