@@ -27,7 +27,7 @@ const TrendingIdeas = () => {
                         className='flex flex-col justify-between bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-[360px] h-[480px] overflow-hidden'
                     >
                         <div>
-                            <div className="relative w-full h-40 flex items-center justify-center bg-gray-50 rounded-2xl p-4 overflow-hidden flex-shrink-0 mb-4">
+                            <div className="relative w-full h-40 flex items-center justify-center bg-gray-50 rounded-2xl p-4 overflow-hidden  mb-4">
                                 <Image
                                     src={idea.imageUrl}
                                     alt={idea.ideaTitle}
