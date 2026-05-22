@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import EditCommentModal from '@/components/EditCommentModal';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import { authClient } from '@/lib/auth-client';
+import toast from 'react-hot-toast';
 
 const IdeaDetailsPage = () => {
     const params = useParams();
@@ -76,8 +77,9 @@ const IdeaDetailsPage = () => {
             if (res.ok) {
                 setCommentText("");
                 fetchIdeaDetails();
+                toast.success("New comment add")
             } else {
-                alert("Failed to add comment");
+                toast.error("Failed to add comment");
             }
         } catch (err) {
             console.error("Error adding comment:", err);
@@ -137,18 +139,17 @@ const IdeaDetailsPage = () => {
             </h1>
 
             <p className="text-lg text-gray-600 font-medium mb-2 ">
-               Short Description: {idea.shortDescription}
+              <span className='text-gray-800 text-wrap'> Short Description:</span> {idea.shortDescription}
             </p>
 
-            <div className="text-gray-700 leading-relaxed  pt-6 mb-6">
-                <h3 className="text-xl font-bold mb-3 text-gray-800">Detailed Concept:</h3>
-                <p>{idea.detailedDescription}</p>
-            </div>
-
+             <div className="text-gray-700 leading-relaxed  pt-6 mb-6 items-center">
+                <p className='text-wrap text-lg'> <span className="text-xl font-bold text-gray-800">Detailed Concept: </span>{idea.detailedDescription}</p>
+             </div>
               </div>
               </div>
                <div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">
+
+                <h3 className="text-2xl font-bold text-gray-800 mt-4 mb-6">
                     Discussion ({idea.comments?.length })
                 </h3>
              </div>

@@ -1,6 +1,8 @@
 "use client";
 import { authClient } from '@/lib/auth-client';
 import { FieldError, Input, Label, TextField,Select, ListBox, TextArea, Button, Card } from '@heroui/react';
+import { redirect } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const AddIdeasPage = () => {
   const { data: session } = authClient.useSession();
@@ -25,6 +27,12 @@ const AddIdeasPage = () => {
     });
     const data = await res.json();
     console.log(data)
+    if(res.ok){
+      toast.success('Idea added');
+      redirect('/ideas');
+    }else{
+      toast.error("failed to add");
+    }
   }
     return (
         <div className='max-w-7xl mx-auto mt-5 md:mt-10'>

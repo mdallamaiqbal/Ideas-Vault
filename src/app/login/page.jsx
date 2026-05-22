@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import {Button, Card, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 
 const LoginPage = () => {
@@ -19,7 +20,7 @@ const LoginPage = () => {
             redirect('/')
         }
         if(error){
-            alert('error')
+            toast.error('error')
         }
     }
     const handleGoogleSignin=async()=>{

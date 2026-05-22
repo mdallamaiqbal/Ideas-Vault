@@ -111,7 +111,7 @@ const MyIdeasPage = () => {
                                     className="group border border-gray-100 bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
                                     <div>
                                         <div className="w-full h-48 overflow-hidden rounded-xl relative">
-                                            <Image width={400} height={250} src={idea.imageUrl} alt={idea.title}
+                                            <Image width={400} height={250} src={idea.imageUrl} alt={idea.ideaTitle}
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
 
                                             <span
@@ -122,11 +122,11 @@ const MyIdeasPage = () => {
 
                                         <h2
                                             className="text-xl font-bold mt-4 text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                                            {idea.title}
+                                           Title: {idea.ideaTitle}
                                         </h2>
 
                                         <p className="mt-2 text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                                            {idea.shortDescription}
+                                           <span className='text-black'>Short Description:</span> {idea.shortDescription}
                                         </p>
                                     </div>
 

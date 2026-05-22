@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const EditCommentModal = ({ isOpen, onClose, ideaId, comment, refreshComments }) => {
    const [text, setText] = useState(comment?.text || "");
@@ -24,9 +25,10 @@ const EditCommentModal = ({ isOpen, onClose, ideaId, comment, refreshComments })
 
             if (res.ok) {
                 refreshComments(); 
-                onClose();       
+                onClose();
+                toast.success("Comment Edit Successfully")       
             } else {
-                alert("Failed to update comment");
+                toast.error("Failed to update comment");
             }
         } catch (err) {
             console.error("Error updating comment:", err);

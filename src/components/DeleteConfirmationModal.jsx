@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 const DeleteConfirmationModal = ({ isOpen, onClose, ideaId, commentId, refreshComments }) => {
    const [isDeleting, setIsDeleting] = useState(false);
 
@@ -17,9 +18,10 @@ const DeleteConfirmationModal = ({ isOpen, onClose, ideaId, commentId, refreshCo
 
             if (res.ok) {
                 refreshComments(); 
-                onClose();      
+                onClose(); 
+                toast.success("Deleted")     
             } else {
-                alert("Failed to delete comment");
+               toast.error("Failed to delete comment");
             }
         } catch (err) {
             console.error("Error deleting comment:", err);

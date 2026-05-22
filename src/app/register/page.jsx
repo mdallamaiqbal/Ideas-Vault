@@ -2,6 +2,7 @@
 import { authClient } from "@/lib/auth-client";
 import {Button, Card, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
      const onSubmit = async(e)=>{
@@ -18,7 +19,7 @@ const RegisterPage = () => {
         redirect('/')
     }
     if(error){
-        alert('error')
+       toast.error('error')
     }
     }
     return (

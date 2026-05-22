@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 const UpdateIdeaModal = ({ idea, onClose, onUpdateSuccess }) => {
-    const [title, setTitle] = useState(idea?.title || "");
+    const [ideaTitle, setTitle] = useState(idea?.ideaTitle
+|| "");
     const [category, setCategory] = useState(idea?.category || "");
     const [shortDescription, setShortDescription] = useState(idea?.shortDescription || "");
     const [imageUrl, setImageUrl] = useState(idea?.imageUrl || "");
@@ -11,7 +13,7 @@ const UpdateIdeaModal = ({ idea, onClose, onUpdateSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setUpdating(true);
-        const updatedData = { title, category, shortDescription, imageUrl };
+        const updatedData = { ideaTitle, category, shortDescription, imageUrl };
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${idea._id}`, {
                 method: "PATCH", 
@@ -25,15 +27,15 @@ const UpdateIdeaModal = ({ idea, onClose, onUpdateSuccess }) => {
 
           
             if (res.ok) {
-                alert("Idea updated successfully!");
+               toast.success("Idea updated successfully!");
                 onUpdateSuccess({ ...idea, ...updatedData }); 
                 onClose();
             } else {
-                alert("Something went wrong!");
+               toast.error("Something went wrong!");
             }
         } catch (error) {
             console.error("Error updating idea:", error);
-            alert("Failed to update idea.");
+           toast.error("Failed to update idea.");
         } finally {
             setUpdating(false);
         }
@@ -49,7 +51,7 @@ const UpdateIdeaModal = ({ idea, onClose, onUpdateSuccess }) => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
                         <input
                             type="text"
-                            value={title}
+                            value={ideaTitle}
                             onChange={(e) => setTitle(e.target.value)}
                             className="w-full border rounded-lg px-3 py-2 focus:outline-blue-500 text-black"
                             required
