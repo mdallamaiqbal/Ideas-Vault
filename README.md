@@ -1,9 +1,7 @@
 # 💡 IdeaVault
-
 IdeaVault is a web-based platform where users can share innovative startup ideas, explore ideas posted by others, and engage through comments, and discussions. The system encourages creativity, collaboration, and validation of ideas through community interaction.
 
 Instead of booking or scheduling, the platform focuses on idea validation and engagement, allowing users to discover trending ideas, provide feedback, and refine concepts collectively.
-
 ---
 
 ##  Tools & Technologies Used
@@ -16,7 +14,6 @@ The following modern and powerful tools were used to build this project:
 - **Styling:** Tailwind CSS
 - **Authentication:** Better Auth (with Google/Social Login support)
 - **Icons:** Lucide React
-
 ---
 
 ##  What Users Can See Here
